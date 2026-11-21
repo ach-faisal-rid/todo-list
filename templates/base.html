@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f5fb">
+    <title>{% block title %}Rencana Hari Ini | Todo List{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <main class="page-shell mx-auto w-full max-w-3xl px-4 py-6">
+        <header class="topbar flex items-center justify-between">
+            <a class="brand" href="{{ url_for('task.index') }}" aria-label="Ruang Rencana, beranda">
+                <span class="brand-mark" aria-hidden="true">✦</span>
+                <span>ruang<span class="brand-accent">rencana</span></span>
+            </a>
+            <span class="topbar-note"><span class="status-dot"></span> Satu langkah kecil hari ini</span>
+        </header>
+
+        {% block content %}{% endblock %}
+
+        <footer class="page-footer">Dibuat dengan tenang, untuk hari yang lebih ringan.</footer>
+    </main>
+    {% block dialogs %}{% endblock %}
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section class="welcome-card relative isolate overflow-hidden rounded-3xl shadow-sm" aria-labelledby="welcome-title">
+        <div class="welcome-copy">
+            <p class="eyebrow">RUANG KECIL UNTUK HAL BESAR</p>
+            <h1 id="welcome-title">Pelan-pelan,<br>semua <span>beres.</span></h1>
+            <p class="welcome-description">Tulis yang ingin kamu selesaikan. Tidak perlu terburu-buru, satu per satu juga berarti.</p>
+        </div>
+        <div class="mascot-scene" aria-hidden="true">
+            <span class="sparkle sparkle-one">✦</span>
+            <span class="sparkle sparkle-two">✧</span>
+            <span class="sparkle sparkle-three">✦</span>
+            <div class="mascot-shadow"></div>
+            <div class="mascot">
+                <span class="mascot-cheek cheek-left"></span>
+                <span class="mascot-cheek cheek-right"></span>
+                <span class="mascot-eye eye-left"></span>
+                <span class="mascot-eye eye-right"></span>
+                <span class="mascot-smile"></span>
+                <span class="mascot-arm"></span>
+            </div>
+            <span class="mascot-caption">semangat, ya!</span>
+        </div>
+        <span class="card-orb orb-one" aria-hidden="true"></span>
+        <span class="card-orb orb-two" aria-hidden="true"></span>
+    </section>
+
+    <section class="todo-panel rounded-2xl bg-white shadow-sm" aria-labelledby="todo-heading">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alerts" aria-live="polite">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}" role="alert">
+                            <span class="alert-icon" aria-hidden="true">{{ '✓' if category == 'success' else '!' }}</span>
+                            <span>{{ message }}</span>
+                            <button class="alert-close" type="button" aria-label="Tutup notifikasi">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <div class="panel-heading flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <p class="eyebrow">DAFTAR AKTIVITAS</p>
+                <h2 id="todo-heading">Rencana hari ini <span class="task-count">{{ tasks|length }}</span></h2>
+            </div>
+            <span class="date-note">Mulai dari yang paling mudah ✨</span>
+        </div>
+
+        <form class="add-form" action="{{ url_for('task.add') }}" method="POST">
+            <label class="sr-only" for="task-title">Tulis tugas baru</label>
+            <span class="input-icon" aria-hidden="true">✎</span>
+            <input id="task-title" type="text" name="title" placeholder="Apa yang ingin kamu lakukan?" required autocomplete="off">
+            <button type="submit"><span aria-hidden="true">＋</span> Tambah tugas</button>
+        </form>
+
+        <form id="bulk-delete-form" action="{{ url_for('task.delete_selected') }}" method="POST"></form>
+        <div class="selection-bar">
+            <label class="select-all-label">
+                <input id="select-all" type="checkbox" form="bulk-delete-form">
+                <span>Pilih semua</span>
+            </label>
+            <span id="selection-count" class="selection-count" aria-live="polite">Belum ada tugas dipilih</span>
+            <button class="bulk-delete-button" type="submit" form="bulk-delete-form">
+                <span aria-hidden="true">⌫</span> Hapus pilihan
+            </button>
+        </div>
+        <ul class="task-list">
+            {% for task in tasks %}
+                <li class="task-item">
+                    <label class="task-select">
+                        <input class="task-checkbox" type="checkbox" name="task_ids" value="{{ task.id }}" form="bulk-delete-form" aria-label="Pilih {{ task.title }}">
+                        <span class="task-check" aria-hidden="true"></span>
+                    </label>
+                    <span class="task-title">{{ task.title }}</span>
+                    <small class="task-date">{{ task.created_at }}</small>
+                    <button class="task-edit-trigger" type="button" data-edit-url="{{ url_for('task.edit', task_id=task.id) }}" data-task-title="{{ task.title }}">Edit</button>
+                    <form class="delete-form" action="{{ url_for('task.delete', task_id=task.id) }}" method="POST">
+                        <button class="delete-button" type="submit" aria-label="Hapus {{ task.title }}" data-confirm="Yakin ingin menghapus tugas ini?">Hapus</button>
+                    </form>
+                </li>
+            {% else %}
+                <li class="empty-state">
+                    <span class="empty-icon" aria-hidden="true">☁</span>
+                    <span class="empty-title">Belum ada rencana</span>
+                    <span class="empty-copy">Tambahkan tugas pertamamu. Kami temani dari sini.</span>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <p class="panel-footer"><span aria-hidden="true">♡</span> Ingat, istirahat juga bagian dari rencana.</p>
+    </section>
+{% endblock %}
+
+{% block dialogs %}
+    <dialog class="edit-dialog" aria-labelledby="edit-dialog-title">
+        <form id="edit-task-form" class="edit-dialog-form" method="POST">
+            <div class="edit-dialog-heading">
+                <div>
+                    <p class="eyebrow">PERBARUI RENCANA</p>
+                    <h2 id="edit-dialog-title">Edit tugas</h2>
+                </div>
+                <button class="edit-dialog-close" type="button" aria-label="Tutup dialog">×</button>
+            </div>
+            <label class="edit-dialog-label" for="edit-task-title">Nama tugas</label>
+            <input id="edit-task-title" type="text" name="title" required maxlength="255" autocomplete="off">
+            <div class="edit-dialog-actions">
+                <button class="edit-dialog-cancel" type="button">Batal</button>
+                <button class="edit-dialog-save" type="submit">Simpan perubahan</button>
+            </div>
+        </form>
+    </dialog>
+    <div class="confirm-toast" id="delete-confirmation" role="alertdialog" aria-modal="false"
+         aria-labelledby="delete-confirmation-title" aria-describedby="delete-confirmation-message" hidden>
+        <span class="confirm-toast-icon" aria-hidden="true">!</span>
+        <div class="confirm-toast-copy">
+            <p class="confirm-toast-title" id="delete-confirmation-title">Konfirmasi hapus</p>
+            <p id="delete-confirmation-message">Yakin ingin menghapus tugas ini?</p>
+        </div>
+        <div class="confirm-toast-actions">
+            <button class="confirm-toast-cancel" id="cancel-delete" type="button">Batal</button>
+            <button class="confirm-toast-submit" id="confirm-delete" type="button">Hapus</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+{% endblock %}
