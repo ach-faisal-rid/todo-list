@@ -97,3 +97,5 @@ document.querySelectorAll('.alert').forEach((alert) => {
     window.setTimeout(() => alert.remove(), 6000);
 });
 updateSelection();
+
+// menampilkan data dari database menggunakan 5 data per page

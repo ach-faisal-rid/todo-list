@@ -1238,3 +1238,93 @@ body {
         transform: scale(.72);
     }
 }
+
+.per-page-form {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+  margin: 0 0 0.9rem;
+  color: #77738c;
+  font-size: 0.75rem;
+}
+
+.per-page-form select {
+  min-height: 2.1rem;
+  padding: 0 0.6rem;
+  border: 1px solid #e8e4f2;
+  border-radius: 0.55rem;
+  background: #fff;
+  color: #4a465f;
+  outline: none;
+  cursor: pointer;
+}
+
+.per-page-form select:focus {
+  border-color: #b8aaf1;
+  box-shadow: 0 0 0 3px rgba(121, 101, 215, .09);
+}
+
+/* Wrapper Paginasi */
+.pagination-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Teks Info "Menampilkan 5 dari total 24 tugas..." */
+.pagination-info {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Daftar Tombol Halaman (Berjejer ke Samping) */
+.pagination-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Bentuk Tombol */
+.pagination-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  border-radius: 0.65rem;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+/* Efek Saat Mouse Diarahkan (Hover) */
+.pagination-link:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+/* Tampilan Halaman yang Sedang Aktif */
+.pagination-item.active .pagination-link {
+  background-color: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+  font-weight: 600;
+  pointer-events: none;
+}
